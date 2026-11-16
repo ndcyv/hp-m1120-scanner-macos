@@ -2,7 +2,7 @@
 
 A small **native macOS scanner application** for the legacy **HP LaserJet M1120 MFP** (USB). It combines a locally built, patched [SANE](https://sane-project.org/) `hpljm1005` scanner backend with a Swift/AppKit interface. The patch resolves a reproducible colour-scanning buffer overflow observed with this device on macOS 27.
 
-**Status: experimental, community project; not affiliated with or endorsed by HP or Apple.** The application was tested on **one Apple Silicon iMac running macOS 27**. Other Macs, macOS versions, USB adapters, and scanners have not been verified. The app is built locally, not distributed as a signed/notarized binary.
+**Status: experimental, community project; not affiliated with or endorsed by HP or Apple.** The application was tested on **one Apple Silicon iMac running macOS 27**. Other Macs, macOS versions, USB adapters, and scanners have not been verified. The app is compiled and ad-hoc signed locally, not distributed as an Apple Developer ID-signed or notarized binary.
 
 ## Features
 
@@ -12,7 +12,7 @@ A small **native macOS scanner application** for the legacy **HP LaserJet M1120 
 - Multipage PDF: scan pages one by one, then combine them
 - Optional **searchable PDFs** using macOS Vision OCR, entirely offline
 - Native AppKit user interface; choose the destination folder
-- A built-in application icon
+- A built-in application icon generated locally during installation
 
 **1200 DPI is intentionally disabled** because it stalled during testing. Do not assume support for other HP models. The printer function needs its **own separate printing driver**; this project only addresses scanning.
 
@@ -53,7 +53,7 @@ The application is installed at **`~/Applications/M1120 Scanner.app`**. Launch i
 open "$HOME/Applications/M1120 Scanner.app"
 ```
 
-The installer intentionally depends on the patched executable at `~/m1120-sane-test/install/bin/scanimage`. Keep that directory after installation. The installer will replace an existing **M1120 Scanner** app only after compiling its replacement; it does not change HP printing drivers or Homebrew's SANE installation.
+The installer generates its own icon at build time and intentionally depends on the patched executable at `~/m1120-sane-test/install/bin/scanimage`. Keep that directory after installation. The installer will replace an existing **M1120 Scanner** app only after compiling its replacement; it does not change HP printing drivers or Homebrew's SANE installation.
 
 If the patched SANE executable is already present and working, **skip the SANE build step**. Installing this project is not necessary on a Mac where its existing app already works.
 
@@ -103,7 +103,7 @@ The patch grows the per-channel buffer when necessary while retaining allocation
 
 ```text
 M1120Scanner.swift                  AppKit GUI, multipage PDF and local Vision OCR
-M1120Scanner.icns / .png             Built-in app icon
+scripts/generate-icon.swift            Creates the app icon locally from vector drawing commands
 install.command                     Compiles and installs the app locally
 scripts/build-patched-sane.command  Builds isolated patched SANE 1.4.0
 patches/m1120-color-buffer.patch    Small hpljm1005 backend change
