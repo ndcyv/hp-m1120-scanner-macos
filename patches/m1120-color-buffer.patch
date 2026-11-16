@@ -1,0 +1,29 @@
+--- a/backend/hpljm1005.c
++++ b/backend/hpljm1005.c
+@@ -853,7 +853,23 @@
+     DBG(101,"Got %c layer data on device %s\n", color_char, dev->devname);
+-    if (current_buf->w_offset + size > current_buf->size) {
+-      DBG(100, "buffer overflow\n");
+-      return SANE_STATUS_IO_ERROR;
++    /* Some M1120 colour scans deliver more data for one channel than
++       the initial three-packet buffer can hold. Grow it safely. */
++    if (size > SIZE_MAX - current_buf->w_offset)
++      return SANE_STATUS_NO_MEM;
++    size_t required = current_buf->w_offset + size;
++    if (required > current_buf->size) {
++      size_t capacity = current_buf->size ? current_buf->size : 4096;
++      while (capacity < required) {
++        if (capacity > SIZE_MAX / 2) {
++          capacity = required;
++          break;
++        }
++        capacity *= 2;
++      }
++      char *resized = realloc(current_buf->buffer, capacity);
++      if (!resized)
++        return SANE_STATUS_NO_MEM;
++      current_buf->buffer = resized;
++      current_buf->size = capacity;
+     }
+     memcpy(current_buf->buffer + current_buf->w_offset, buffer, size);
+     current_buf->w_offset += size;
