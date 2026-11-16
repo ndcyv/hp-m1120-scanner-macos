@@ -2,7 +2,9 @@
 
 A small **native macOS scanner application** for the legacy **HP LaserJet M1120 MFP** (USB). It combines a locally built, patched [SANE](https://sane-project.org/) `hpljm1005` scanner backend with a Swift/AppKit interface. The patch resolves a reproducible colour-scanning buffer overflow observed with this device on macOS 27.
 
-**Status: experimental, community project; not affiliated with or endorsed by HP or Apple.** The application was tested on **one Apple Silicon iMac running macOS 27**. Other Macs, macOS versions, USB adapters, and scanners have not been verified. The app is compiled and ad-hoc signed locally, not distributed as an Apple Developer ID-signed or notarized binary.
+**Status: experimental, community project; not affiliated with or endorsed by HP or Apple.**
+
+**Fresh-install testing:** The scanner patch and application functionality were confirmed on the development iMac, but this public repository's combined build scripts and locally generated icon have not yet been tested on a clean Mac. Please report installation errors in Issues. The application was tested on **one Apple Silicon iMac running macOS 27**. Other Macs, macOS versions, USB adapters, and scanners have not been verified. The app is compiled and ad-hoc signed locally, not distributed as an Apple Developer ID-signed or notarized binary.
 
 ## Features
 
